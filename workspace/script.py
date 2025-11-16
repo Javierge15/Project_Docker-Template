@@ -1,0 +1,1 @@
+print("Welcome to Docker Development Environment - by Javier Gomez Eguizabal")

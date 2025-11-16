@@ -3,12 +3,12 @@
 set -e
 CURRENT_DIR=$(pwd)
 
-#  Load the environment variables from the config.env file
+## Load the environment variables from the .env file
 set -o allexport
-source config.env
+source .env
 set -o allexport
 
-# Ensure environment variables are set
+## Ensure required environment variables are set
 : "${USER_ID:?Need to set USER_ID}"
 : "${USER_NAME:?Need to set USER_NAME}"
 : "${GROUP_ID:?Need to set GROUP_ID}"
@@ -17,6 +17,7 @@ set -o allexport
 : "${DOCKER_IMAGE_NAME:?Need to set DOCKER_IMAGE_NAME}"
 
 
+## Run the Docker container with the specified configuration
 if docker run \
         --net=host \
         --shm-size=2G \

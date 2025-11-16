@@ -1,19 +1,19 @@
-# Base image
+## Base image
 FROM ubuntu:22.04
 
-# Compilation arguments
+## Build arguments - Inject values from .env file
 ARG USER_ID
 ARG USER_NAME
 ARG GROUP_ID
 ARG GROUP_NAME
 ARG WORKSPACE
 
-# Environment configuration
+## Environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
-# Basic system installation
+## Package installation
 RUN apt-get update && apt-get install -y \
     sudo \
     build-essential \
@@ -30,31 +30,29 @@ RUN apt-get update && apt-get install -y \
     && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
-# Non privileged user setup
+## User Creation - Synchronize the container user with the host user
 RUN groupadd -g ${GROUP_ID} ${GROUP_NAME} \
     && useradd -u ${USER_ID} -g ${GROUP_ID} -m -s /bin/bash ${USER_NAME} \
     && echo "${USER_NAME}:${USER_NAME}" | chpasswd \
     && adduser ${USER_NAME} sudo
 
-
-# Grant access to video devices
+## Hardware Access
 RUN usermod -aG video $USER_NAME
 
-# Switch to the new user
+## Switch to the new user
 USER $USER_ID
 
-# Create and set the working directory
+## Set working directory
 WORKDIR /home/$USER_NAME/$WORKSPACE
 
-# Install pip packages
+## Python package installation
 RUN python3 -m pip install --upgrade pip
-
 RUN pip install opencv-python && \
     pip install numpy
 
-# Path and environment setup
+## Path configuration
 RUN export PATH=$PATH:/home/$USER_NAME/.local/bin && \
     echo "export PATH=$PATH:/home/$USER_NAME/.local/bin" >> /home/$USER_NAME/.bashrc
 
-# Default command
+## Default command
 CMD ["tail", "-f", "/dev/null"]

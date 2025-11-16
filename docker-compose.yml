@@ -1,4 +1,6 @@
+## Use Docker Compose version 3.9
 version: "3.9"
+
 services:
   devcontainer:
     container_name: ${DOCKER_IMAGE_NAME}
@@ -14,6 +16,7 @@ services:
     network_mode: host
     environment:
     - DISPLAY=${DISPLAY}
+    ## Volumes shared between host and container
     volumes:
     - ./${WORKSPACE}:/home/${USER_NAME}/${WORKSPACE}
     - $HOME/.Xauthority:/home/${USER_NAME}/.Xauthority:ro

@@ -1,29 +1,28 @@
 #!/bin/bash
 
-# Get the current directory
 set -e
 current_dir=$(pwd)
 
-#  Load the environment variables from the config.env file
+## Load the environment variables from the .env file
 set -o allexport
-source config.env
+source .env
 set -o allexport
 
-# Ensure environment variables are set
+## Ensure required environment variables are set
 : "${USER_ID:?Need to set USER_ID}"
 : "${USER_NAME:?Need to set USER_NAME}"
-: "${GROUP_ID:?Need to set GROUP_ID}"
+: "${GROUP_ID:?Need to set GROUP_ID}"po
 : "${GROUP_NAME:?Need to set GROUP_NAME}"
 : "${WORKSPACE:?Need to set WORKSPACE}"
 : "${DOCKER_IMAGE_NAME:?Need to set DOCKER_IMAGE_NAME}"
 
 
-# Remove the existing Docker container if it exists
+## Remove the existing Docker container if it exists
 if docker ps -a | grep $DOCKER_IMAGE_NAME; then
     docker rm $DOCKER_IMAGE_NAME
 fi
 
-# Build Docker image if it does not exist
+## Build Docker image if it does not exist
 echo "Building Docker image..."
 if docker buildx build \
     --build-arg GROUP_ID=$GROUP_ID \
